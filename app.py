@@ -19,6 +19,13 @@ model = Model()
 
 with gr.Blocks(css='style.css') as demo:
     gr.Markdown(DESCRIPTION)
+
+    gr.HTML("""
+<p>For faster inference without waiting in queue, you may duplicate the space and upgrade to GPU in settings.
+<br/>
+<a href="https://huggingface.co/spaces/hysts/TEXTure?duplicate=true">
+<img style="margin-top: 0em; margin-bottom: 0em" src="https://bit.ly/3gLdBN6" alt="Duplicate Space"></a>
+<p/>""")
     with gr.Row():
         with gr.Column():
             input_shape = gr.Model3D(label='Input 3D mesh')

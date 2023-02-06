@@ -46,8 +46,16 @@ with gr.Blocks(css='style.css') as demo:
             ['shapes/nascar.obj', 'A next gen nascar', 2, 10],
         ]
         gr.Examples(examples=examples,
-                    inputs=[input_shape, text, seed, guidance_scale],
-                    outputs=[result, output_file],
+                    inputs=[
+                        input_shape,
+                        text,
+                        seed,
+                        guidance_scale,
+                    ],
+                    outputs=[
+                        result,
+                        output_file,
+                    ],
                     cache_examples=False)
 
     run_button.click(fn=model.run,

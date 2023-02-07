@@ -77,4 +77,4 @@ with gr.Blocks(css='style.css') as demo:
                          output_file,
                      ])
 
-demo.queue(max_size=5).launch()
+demo.queue(max_size=5).launch(debug=True)

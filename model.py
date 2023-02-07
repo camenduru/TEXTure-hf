@@ -5,8 +5,10 @@ import pathlib
 import shlex
 import subprocess
 import sys
+from typing import Generator
 
 import gradio as gr
+import tqdm
 
 sys.path.append('TEXTurePaper')
 
@@ -48,8 +50,9 @@ class Model:
         subprocess.run(shlex.split(f'zip -r {out_path} {mesh_dir}'))
         return out_path
 
-    def run(self, shape_path: str, text: str, seed: int,
-            guidance_scale: float) -> tuple[str, str]:
+    def run(
+        self, shape_path: str, text: str, seed: int, guidance_scale: float
+    ) -> Generator[tuple[list[str], str | None, str | None, str], None, None]:
         if not shape_path.endswith('.obj'):
             raise gr.Error('The input file is not .obj file.')
         if not self.check_num_faces(shape_path):
@@ -57,7 +60,28 @@ class Model:
 
         config = self.load_config(shape_path, text, seed, guidance_scale)
         trainer = TEXTure(config)
-        trainer.paint()
+
+        trainer.mesh_model.train()
+
+        total_steps = len(trainer.dataloaders['train'])
+        for step, data in enumerate(trainer.dataloaders['train'], start=1):
+            trainer.paint_step += 1
+            trainer.paint_viewpoint(data)
+            trainer.evaluate(trainer.dataloaders['val'],
+                             trainer.eval_renders_path)
+            trainer.mesh_model.train()
+
+            sample_image_dir = config.log.exp_dir / 'vis' / 'eval'
+            sample_image_paths = sorted(
+                sample_image_dir.glob(f'step_{trainer.paint_step:05d}_*.jpg'))
+            sample_image_paths = [
+                path.as_posix() for path in sample_image_paths
+            ]
+            yield sample_image_paths, None, None, f'{step}/{total_steps}'
+
+        trainer.mesh_model.change_default_to_median()
+        trainer.full_eval()
+
         video_path = config.log.exp_dir / 'results' / 'step_00010_rgb.mp4'
         zip_path = self.zip_results(config.log.exp_dir)
-        return video_path.as_posix(), zip_path
+        yield sample_image_paths, video_path.as_posix(), zip_path, 'Done!'

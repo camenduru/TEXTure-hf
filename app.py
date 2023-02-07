@@ -42,8 +42,14 @@ with gr.Blocks(css='style.css') as demo:
                                        step=0.1)
             run_button = gr.Button('Run')
         with gr.Column():
-            result = gr.Video(label='Result')
-            output_file = gr.File(label='Output mesh file')
+            progress_text = gr.Text(label='Progress')
+            with gr.Tabs():
+                with gr.TabItem(label='Images from each viewpoint'):
+                    viewpoint_images = gr.Gallery(show_label=False)
+                with gr.TabItem(label='Result video'):
+                    result_video = gr.Video(show_label=False)
+                with gr.TabItem(label='Output mesh file'):
+                    output_file = gr.File(show_label=False)
     with gr.Row():
         examples = [
             ['shapes/dragon1.obj', 'a photo of a dragon', 0, 7.5],
@@ -60,7 +66,7 @@ with gr.Blocks(css='style.css') as demo:
                         guidance_scale,
                     ],
                     outputs=[
-                        result,
+                        result_video,
                         output_file,
                     ],
                     cache_examples=False)
@@ -73,8 +79,10 @@ with gr.Blocks(css='style.css') as demo:
                          guidance_scale,
                      ],
                      outputs=[
-                         result,
+                         viewpoint_images,
+                         result_video,
                          output_file,
+                         progress_text,
                      ])
 
 demo.queue(max_size=5).launch(debug=True)

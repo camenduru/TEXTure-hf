@@ -39,9 +39,10 @@ with gr.Blocks(css='style.css') as demo:
             progress_text = gr.Text(label='Progress')
             with gr.Tabs():
                 with gr.TabItem(label='Images from each viewpoint'):
-                    viewpoint_images = gr.Gallery(show_label=False)
-                with gr.TabItem(label='Result video'):
-                    result_video = gr.Video(show_label=False)
+                    viewpoint_images = gr.Gallery(show_label=False).style(
+                        columns=4, height='auto')
+                with gr.TabItem(label='Result 3D model'):
+                    result_3d_model = gr.Model3D(show_label=False)
                 with gr.TabItem(label='Output mesh file'):
                     output_file = gr.File(show_label=False)
     with gr.Row():
@@ -60,7 +61,7 @@ with gr.Blocks(css='style.css') as demo:
                         guidance_scale,
                     ],
                     outputs=[
-                        result_video,
+                        result_3d_model,
                         output_file,
                     ],
                     cache_examples=False)
@@ -74,7 +75,7 @@ with gr.Blocks(css='style.css') as demo:
                      ],
                      outputs=[
                          viewpoint_images,
-                         result_video,
+                         result_3d_model,
                          output_file,
                          progress_text,
                      ])

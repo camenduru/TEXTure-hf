@@ -8,6 +8,7 @@ import sys
 from typing import Generator, Optional
 
 import gradio as gr
+import trimesh
 
 sys.path.append('TEXTurePaper')
 
@@ -80,8 +81,14 @@ class Model:
             yield sample_image_paths, None, None, f'{step}/{total_steps}'
 
         trainer.mesh_model.change_default_to_median()
-        trainer.full_eval()
 
-        video_path = config.log.exp_dir / 'results' / 'step_00010_rgb.mp4'
+        save_dir = trainer.exp_path / 'mesh'
+        save_dir.mkdir(exist_ok=True, parents=True)
+        trainer.mesh_model.export_mesh(save_dir)
+        model_path = save_dir / 'mesh.obj'
+        mesh = trimesh.load(model_path)
+        mesh_path = save_dir / 'mesh.glb'
+        mesh.export(mesh_path, file_type='glb')
+
         zip_path = self.zip_results(config.log.exp_dir)
-        yield sample_image_paths, video_path.as_posix(), zip_path, 'Done!'
+        yield sample_image_paths, mesh_path.as_posix(), zip_path, 'Done!'

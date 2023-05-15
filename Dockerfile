@@ -35,7 +35,7 @@ WORKDIR ${HOME}/app
 
 RUN curl https://pyenv.run | bash
 ENV PATH=${HOME}/.pyenv/shims:${HOME}/.pyenv/bin:${PATH}
-ENV PYTHON_VERSION=3.9.16
+ARG PYTHON_VERSION=3.9.16
 RUN pyenv install ${PYTHON_VERSION} && \
     pyenv global ${PYTHON_VERSION} && \
     pyenv rehash && \

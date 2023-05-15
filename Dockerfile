@@ -45,7 +45,7 @@ RUN pip install --no-cache-dir -U torch==1.12.1+cu113 torchvision==0.13.1+cu113 
 COPY --chown=1000 requirements.txt /tmp
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
 RUN pip install --no-cache-dir -U kaolin==0.13.0 -f https://nvidia-kaolin.s3.us-east-2.amazonaws.com/torch-1.12.1_cu113.html
-RUN pip install --no-cache-dir -U gradio==3.17.1
+RUN pip install --no-cache-dir -U gradio==3.30.0
 
 COPY --chown=1000 . ${HOME}/app
 RUN cd TEXTurePaper && patch -p1 < ../patch

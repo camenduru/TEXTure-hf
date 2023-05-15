@@ -5,7 +5,7 @@ import pathlib
 import shlex
 import subprocess
 import sys
-from typing import Generator
+from typing import Generator, Optional
 
 import gradio as gr
 
@@ -51,7 +51,8 @@ class Model:
 
     def run(
         self, shape_path: str, text: str, seed: int, guidance_scale: float
-    ) -> Generator[tuple[list[str], str | None, str | None, str], None, None]:
+    ) -> Generator[tuple[list[str], Optional[str], Optional[str], str], None,
+                   None]:
         if not shape_path.endswith('.obj'):
             raise gr.Error('The input file is not .obj file.')
         if not self.check_num_faces(shape_path):

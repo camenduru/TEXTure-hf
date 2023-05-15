@@ -8,7 +8,6 @@ import sys
 from typing import Generator
 
 import gradio as gr
-import tqdm
 
 sys.path.append('TEXTurePaper')
 

@@ -2,30 +2,24 @@
 
 from __future__ import annotations
 
+import os
+
 import gradio as gr
 
 from model import Model
 
-DESCRIPTION = '''# TEXTure
+DESCRIPTION = '''# [TEXTure](https://github.com/TEXTurePaper/TEXTurePaper)
 
-This is an unofficial demo for [https://github.com/TEXTurePaper/TEXTurePaper](https://github.com/TEXTurePaper/TEXTurePaper).
-
-This demo only accepts as input `.obj` files with less than 100,000 faces.
-
-Inference takes about 10 minutes on a T4 GPU.
+- This demo only accepts as input `.obj` files with less than 100,000 faces.
+- Inference takes about 10 minutes on a T4 GPU.
 '''
+if (SPACE_ID := os.getenv('SPACE_ID')) is not None:
+    DESCRIPTION += f'\n<p>For faster inference without waiting in queue, you may duplicate the space and upgrade to GPU in settings. <a href="https://huggingface.co/spaces/{SPACE_ID}?duplicate=true"><img style="display: inline; margin-top: 0em; margin-bottom: 0em" src="https://bit.ly/3gLdBN6" alt="Duplicate Space" /></a></p>'
 
 model = Model()
 
 with gr.Blocks(css='style.css') as demo:
     gr.Markdown(DESCRIPTION)
-
-    gr.HTML("""
-<p>For faster inference without waiting in queue, you may duplicate the space and upgrade to GPU in settings.
-<br/>
-<a href="https://huggingface.co/spaces/TEXTurePaper/TEXTure?duplicate=true">
-<img style="margin-top: 0em; margin-bottom: 0em" src="https://bit.ly/3gLdBN6" alt="Duplicate Space"></a>
-<p/>""")
     with gr.Row():
         with gr.Column():
             input_shape = gr.Model3D(label='Input 3D mesh')

@@ -28,7 +28,7 @@ index 610d2de..e172080 100644
 -            with open('./TOKEN', 'r') as f:
 -                self.token = f.read().replace('\n', '')  # remove the last \n!
 -                logger.info(f'loaded hugging face access token from ./TOKEN!')
-+            self.token = os.environ['HF_TOKEN']
++            self.token = os.getenv('HF_TOKEN')
          except FileNotFoundError as e:
              self.token = True
              logger.warning(
